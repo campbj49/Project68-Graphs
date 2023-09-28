@@ -41,10 +41,47 @@ class Graph {
   }
 
   // this function returns an array of Node values using DFS
-  depthFirstSearch(start) {}
+  depthFirstSearch(start) {
+    //start by making a set for tracking which nodes have been visited
+    let visited = new Set();
+    let res = [];
+    //recurse through whole graph
+    function _depthFirstSearch(node){
+      //update the external lists
+      res.push(node.value);
+      visited.add(node);
+      //iterate through all the adjacent nodes
+      for(let adjacent of node.adjacent)
+        if(!visited.has(adjacent)) _depthFirstSearch(adjacent)
+    }
+    
+    _depthFirstSearch(start);
+    return res;
+  }
 
   // this function returns an array of Node values using BFS
-  breadthFirstSearch(start) {}
+  breadthFirstSearch(start) {
+    let visited = new Set();
+    let res = [];
+    //use the same algorithm for bfsing a bst
+    function _breadthFirstSearch(ring){
+      let newRing = [];
+      for(let parent of ring){
+        res.push(parent.value);
+        for(let adjacent of parent.adjacent)
+          if(!visited.has(adjacent)) {
+            visited.add(adjacent);
+            newRing.push(adjacent);
+          }
+      }
+      if(newRing.length != 0 ) _breadthFirstSearch(newRing);
+    }
+    visited.add(start);
+    _breadthFirstSearch([start])
+
+    return res;
+
+  }
 }
 
 module.exports = {Graph, Node}
